@@ -1,45 +1,38 @@
-# PRM392 - Flutter Exercises & Assignments
+# Slot 8 — Student Manager App
 
-Repo tổng hợp 10 bài tập thực hành PRM392 (Flutter & Dart). Mỗi bài tập được tổ chức độc lập trên một nhánh (branch) riêng biệt với mã nguồn đặt ngay tại thư mục gốc để thuận tiện cho việc kiểm tra và chạy ứng dụng (`flutter run`).
+Nguồn: **Slot8.pdf**, phần EXERCISE, trang 19. Mỗi thư mục là một exercise độc lập.
 
----
+Bài tập tổng hợp 1. Named routes + arguments, danh sách/chi tiết/thêm/sửa, Navigator.push/pop trả Student, Android deep link, xử lý route sai và mã không tồn tại.
 
-## 📌 Danh sách các bài tập & Nhánh (Branches)
+## Chạy và kiểm tra
 
-| Slot | Tên bài tập | Nhánh (Branch) | Mô tả tóm tắt |
-| :---: | :--- | :---: | :--- |
-| **01** | **MyFirstFlutterApp — Personal Info & Counter** | [`slot01`](../../tree/slot01) | Thông tin cá nhân, avatar và bộ đếm tăng/giảm bằng `setState`. |
-| **02** | **My Daily Planner** | [`slot02`](../../tree/slot02) | Ứng dụng lập kế hoạch công việc hàng ngày với danh sách task. |
-| **03** | **Function Processor** | [`slot03`](../../tree/slot03) | Xử lý logic hàm và kiểm thử tính toán trên Dart. |
-| **04** | **Async Product Loader** | [`slot04`](../../tree/slot04) | Tải dữ liệu sản phẩm bất đồng bộ (FutureBuilder, async/await). |
-| **05** | **Live Counter Stream** | [`slot05`](../../tree/slot05) | Đếm trực tiếp theo thời gian thực sử dụng Stream/StreamBuilder. |
-| **06** | **Student List Interaction App** | [`slot06`](../../tree/slot06) | Quản lý danh sách sinh viên, tương tác xem/chọn item. |
-| **07** | **Simple Planner App** | [`slot07`](../../tree/slot07) | Ứng dụng quản lý kế hoạch đơn giản, cập nhật trạng thái công việc. |
-| **08** | **Student Manager App** | [`slot08`](../../tree/slot08) | Quản trị sinh viên với đầy đủ thao tác thêm, sửa, xóa, tìm kiếm. |
-| **09** | **Simple Product Dashboard App** | [`slot09`](../../tree/slot09) | Dashboard thống kê và hiển thị danh mục sản phẩm. |
-| **10** | **Responsive Dashboard App** | [`slot10`](../../tree/slot10) | Dashboard đa màn hình, tương thích Responsive Layout (Mobile/Tablet/Web). |
+Mở chính thư mục này trong VS Code/Android Studio. Flutter SDK dùng để kiểm tra: 3.47.3, Dart 3.13.3. Không cần tài khoản hoặc API key.
 
----
-
-## 🚀 Hướng dẫn kiểm tra và chạy từng bài
-
-Mỗi nhánh (branch) chứa toàn bộ mã nguồn của bài đó ngay tại thư mục gốc.
-
-### 1. Chuyển sang nhánh bài cần kiểm tra
-```bash
-git checkout slot01   # Hoặc slot02, slot03, ..., slot10
-```
-
-### 2. Cài đặt dependencies và chạy
-```bash
+```sh
 flutter pub get
+flutter analyze
+flutter test
 flutter run
 ```
 
-### 3. Kiểm tra mã nguồn & Chạy test
-```bash
-flutter analyze
-flutter test
+Build APK: `flutter build apk --debug`. Chạy trình duyệt khi cần: `flutter run -d chrome`. Thư mục android và web đã có đầy đủ cấu hình. `android/local.properties` sẽ được Flutter tạo lại theo máy của bạn.
+
+## Phạm vi
+
+Dữ liệu mẫu lưu trong bộ nhớ và được đặt lại khi khởi động lại app, theo phạm vi bài tập; không có database/backend.
+
+Các test trong `test/` kiểm tra hành vi của bài; kết quả chạy thực tế nằm trong `verification/` khi đóng gói. Đây là test viết theo yêu cầu đề, không phải bộ test ẩn của giảng viên (PDF không cung cấp bộ test máy).
+
+## Android deep link
+
+Cài APK rồi chạy (thay SV01 bằng mã cần xem):
+
+```sh
+adb shell am start -W -a android.intent.action.VIEW -d "studentapp://student/detail?id=SV01" vn.edu.prm.slot08_student_manager
 ```
 
-> **Ghi chú**: Kết quả kiểm thử thực tế và ảnh chụp màn hình chạy thử nghiệm đã được lưu sẵn trong thư mục `verification/` của từng bài.
+Cũng hỗ trợ `studentapp://student/SV01` và route `/student/SV01`. Cold start dựng Home dưới Detail, Back quay về Home. Mã không tồn tại hiển thị thông báo; không ép kiểu arguments khi sai kiểu.
+
+Navigator 1.0: push/pop ra lệnh trực tiếp cho stack. Navigator 2.0: danh sách Page được tạo theo trạng thái; bài này yêu cầu nhận thức khái niệm, không bắt buộc đổi sang Router. StudentStore giữ một nguồn dữ liệu cho List/Detail nên sửa ở Form được cập nhật nhất quán.
+
+Trên Windows, nên giải nén vào đường dẫn không dấu (ví dụ `D:\PRM_Submission\slot08_student_manager`) để tránh lỗi Flutter analyzer với đường dẫn Unicode.
