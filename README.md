@@ -21,6 +21,14 @@ Repo tổng hợp 10 bài tập thực hành PRM392 (Flutter & Dart). Mỗi bài
 
 ---
 
+## 📌 Danh sách bài thực hành Lab & Nhánh (Branches)
+
+| Lab | Tên bài thực hành | Nhánh (Branch) | Mô tả tóm tắt |
+| :---: | :--- | :---: | :--- |
+| **Lab 4** | **Manage Recurring Bills App** | [`lab4`](../../tree/lab4) | Quản lý hóa đơn định kỳ, lưu trữ SQLite / sqflite, CRUD, lọc Paid/Unpaid. |
+
+---
+
 ## 🚀 Hướng dẫn kiểm tra và chạy từng bài
 
 Mỗi nhánh (branch) chứa toàn bộ mã nguồn của bài đó ngay tại thư mục gốc.
