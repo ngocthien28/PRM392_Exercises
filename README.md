@@ -1,45 +1,83 @@
-# PRM392 - Flutter Exercises & Assignments
+# Lab4 — Manage Recurring Bills App
 
-Repo tổng hợp 10 bài tập thực hành PRM392 (Flutter & Dart). Mỗi bài tập được tổ chức độc lập trên một nhánh (branch) riêng biệt với mã nguồn đặt ngay tại thư mục gốc để thuận tiện cho việc kiểm tra và chạy ứng dụng (`flutter run`).
+Ứng dụng Flutter quản lý hóa đơn định kỳ, thực hiện đầy đủ yêu cầu trong `DE_BAI.pdf`. Dữ liệu lưu cục bộ bằng **sqflite / SQLite**, không cần tài khoản hay kết nối mạng khi sử dụng.
 
----
+## Chức năng
 
-## 📌 Danh sách các bài tập & Nhánh (Branches)
+- **Home:** banner ảnh PNG đóng gói bằng `Image.asset`, danh sách hóa đơn gồm tên, danh mục, số tiền VND, hạn thanh toán, Paid/Unpaid. FAB mở màn hình thêm. Chạm hóa đơn để sửa.
+- **Add:** kiểm tra tên, danh mục, số tiền, ngày ISO và trạng thái. ID tự tăng; trạng thái mặc định Unpaid. Save ghi SQLite, quay lại Home và tự tải danh sách mới; Back không lưu.
+- **Update:** điền sẵn tất cả thông tin, cho sửa và đổi Paid/Unpaid. Ba nút Update/Delete/Back nằm cùng một hàng.
+- **Delete:** hộp thoại xác nhận; Cancel giữ nguyên dữ liệu. Thông báo thành công sau thêm/sửa/xóa.
+- **Unpaid:** tab dưới màn hình, chỉ hiển thị hóa đơn chưa thanh toán và tổng tiền còn nợ ở phía dưới. Tổng được tính bằng truy vấn SQL có điều kiện `status = 'Unpaid'`.
+- Có trạng thái rỗng, tải dữ liệu, lỗi đọc/ghi và thử lại. Nút lưu bị khóa khi đang ghi để tránh tạo trùng hóa đơn.
 
-| Slot | Tên bài tập | Nhánh (Branch) | Mô tả tóm tắt |
-| :---: | :--- | :---: | :--- |
-| **01** | **MyFirstFlutterApp — Personal Info & Counter** | [`slot01`](../../tree/slot01) | Thông tin cá nhân, avatar và bộ đếm tăng/giảm bằng `setState`. |
-| **02** | **My Daily Planner** | [`slot02`](../../tree/slot02) | Ứng dụng lập kế hoạch công việc hàng ngày với danh sách task. |
-| **03** | **Function Processor** | [`slot03`](../../tree/slot03) | Xử lý logic hàm và kiểm thử tính toán trên Dart. |
-| **04** | **Async Product Loader** | [`slot04`](../../tree/slot04) | Tải dữ liệu sản phẩm bất đồng bộ (FutureBuilder, async/await). |
-| **05** | **Live Counter Stream** | [`slot05`](../../tree/slot05) | Đếm trực tiếp theo thời gian thực sử dụng Stream/StreamBuilder. |
-| **06** | **Student List Interaction App** | [`slot06`](../../tree/slot06) | Quản lý danh sách sinh viên, tương tác xem/chọn item. |
-| **07** | **Simple Planner App** | [`slot07`](../../tree/slot07) | Ứng dụng quản lý kế hoạch đơn giản, cập nhật trạng thái công việc. |
-| **08** | **Student Manager App** | [`slot08`](../../tree/slot08) | Quản trị sinh viên với đầy đủ thao tác thêm, sửa, xóa, tìm kiếm. |
-| **09** | **Simple Product Dashboard App** | [`slot09`](../../tree/slot09) | Dashboard thống kê và hiển thị danh mục sản phẩm. |
-| **10** | **Responsive Dashboard App** | [`slot10`](../../tree/slot10) | Dashboard đa màn hình, tương thích Responsive Layout (Mobile/Tablet/Web). |
+Đề có dùng các thuật ngữ FlatList/Bottom Tab Navigator của React Native, đồng thời yêu cầu Flutter. Bài sử dụng các thành phần Flutter tương ứng: `ListView.builder` và `BottomNavigationBar`, đúng gợi ý trong PDF.
 
----
+## Cấu trúc
 
-## 🚀 Hướng dẫn kiểm tra và chạy từng bài
-
-Mỗi nhánh (branch) chứa toàn bộ mã nguồn của bài đó ngay tại thư mục gốc.
-
-### 1. Chuyển sang nhánh bài cần kiểm tra
-```bash
-git checkout slot01   # Hoặc slot02, slot03, ..., slot10
+```text
+lib/
+  main.dart                        Khởi tạo app và mở database
+  models/bill.dart                  Model, enum trạng thái, kiểm tra số/ngày
+  data/bill_repository.dart         SQLite schema, CRUD, truy vấn tổng tiền
+  screens/home_screen.dart          Home + Unpaid và tự làm mới dữ liệu
+  screens/bill_form_screen.dart     Form thêm/sửa và xác nhận xóa
+  widgets/bill_card.dart            Thẻ hóa đơn, icon, định dạng VND
+assets/bills_banner.png             Banner gốc được vẽ cho bài
+test/                              Test model, SQLite thật và giao diện
+integration_test/                  Test toàn luồng trên Android thật/emulator
+verification/                      Kết quả và bằng chứng kiểm tra
 ```
 
-### 2. Cài đặt dependencies và chạy
-```bash
+## Chạy ứng dụng
+
+Môi trường đã sử dụng: Flutter **3.47.3**, Dart **3.13.3**, Android SDK và emulator. Giải nén vào thư mục **không dấu**, ví dụ `D:\PRM_Submission\lab4_recurring_bills`, để tránh lỗi analyzer với đường dẫn Unicode trong Flutter trên máy Windows này.
+
+```sh
 flutter pub get
+flutter analyze
+flutter test
 flutter run
 ```
 
-### 3. Kiểm tra mã nguồn & Chạy test
-```bash
-flutter analyze
-flutter test
+Build APK:
+
+```sh
+flutter build apk --debug
 ```
 
-> **Ghi chú**: Kết quả kiểm thử thực tế và ảnh chụp màn hình chạy thử nghiệm đã được lưu sẵn trong thư mục `verification/` của từng bài.
+APK được tạo tại `build/app/outputs/flutter-apk/app-debug.apk`. Android Studio/Flutter sẽ tạo `android/local.properties` phù hợp SDK của máy bạn. ZIP không chứa SDK, cache hoặc thư mục build.
+
+Kiểm thử tích hợp, sau khi mở emulator:
+
+```sh
+flutter devices
+flutter test integration_test/bills_flow_test.dart -d emulator-5554
+```
+
+Thay `emulator-5554` bằng ID thiết bị của bạn. Integration test dùng **file database riêng** `lab4_integration_test.db`; không xóa dữ liệu trong database chính.
+
+## Dữ liệu và kiểm tra đầu vào
+
+Database chính: `recurring_bills.db` trong thư mục database riêng của ứng dụng Android. Database được tạo lần đầu và mở lại ở những lần tiếp theo; không seed dữ liệu mẫu và không xóa bảng khi khởi động.
+
+| Cột | Kiểu SQLite | Quy tắc |
+|---|---|---|
+| id | INTEGER | PRIMARY KEY AUTOINCREMENT |
+| bill_name | TEXT | Bắt buộc, trim khoảng trắng, tối đa 120 ký tự |
+| category | TEXT | Utilities / Subscription / Rent / Finance / Health / Other |
+| amount | REAL | Dương, hữu hạn, không quá 1.000.000.000.000 VND |
+| status | TEXT | Paid hoặc Unpaid; mặc định Unpaid |
+| due_date | TEXT | Ngày thật dạng YYYY-MM-DD, từ năm 1900 đến 2100 |
+
+Số tiền có thể nhập `850000` hoặc `850.000`; số thập phân tối đa 2 chữ số như `12,50` hoặc `12.50`. Không chấp nhận số âm/0/NaN, ký hiệu khoa học hoặc dấu phân cách hỗn hợp. Ngày nhập tay được kiểm tra cả số ngày trong tháng/năm nhuận; cũng có DatePicker.
+
+Dữ liệu chỉ bị xóa khi xác nhận Delete, xóa dữ liệu ứng dụng hoặc gỡ ứng dụng. Bài không tự sinh hóa đơn tháng kế tiếp hoặc gửi thông báo vì đề không yêu cầu hai chức năng này.
+
+## Tài liệu kỹ thuật đã đối chiếu
+
+- [Flutter — Persist data with SQLite](https://docs.flutter.dev/cookbook/persistence/sqlite).
+- [sqflite — openDatabase](https://pub.dev/documentation/sqflite/latest/sqflite/openDatabase.html).
+- [sqflite — hướng dẫn kiểm thử SQLite bằng FFI](https://github.com/tekartik/sqflite/blob/master/sqflite_common_ffi/doc/testing.md).
+
+Xem kết quả thực tế trong `verification/RESULTS.md`. Các test được viết theo đề; PDF không cung cấp bộ test ẩn của giảng viên.
