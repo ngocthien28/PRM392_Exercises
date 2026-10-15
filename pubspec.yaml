@@ -1,0 +1,9 @@
+name: slot03_function_processor
+description: Slot 3 - Function Processor, Dart console exercise.
+publish_to: none
+version: 1.0.0
+environment:
+  sdk: '>=3.8.0 <4.0.0'
+dev_dependencies:
+  test: ^1.26.0
+  lints: ^6.0.0
